@@ -115,7 +115,7 @@ export const handleUsedPortErrorOrKill = (opts: Required<Options>, netstatResult
  * @returns a server child process that is guaranteed to be running
  */
 export const createServerSync = (cmd: string, args: string[], opts: Required<Options>) => {
-  const server = spawn(cmd, args, { env: opts.env });
+  const server = spawn(cmd, args, { env: opts.env, shell: true });
   if (!waitForServerToStartOrStop(opts, true)) {
     killPid(server.pid, opts.signal);
     throw new Error(`
