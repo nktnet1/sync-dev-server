@@ -14,7 +14,7 @@ on:
 
 jobs:
   test:
-    runs-on: node:18-bullseye-slim
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x, 16.x]

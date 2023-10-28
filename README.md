@@ -6,7 +6,7 @@
 &nbsp;
 [![codecov](https://codecov.io/gh/nktnet1/sync-dev-server/branch/main/graph/badge.svg?token=RAC7SKJTGU)](https://codecov.io/gh/nktnet1/sync-dev-server)
 &nbsp;
-[![Maintainability](https://api.codeclimate.com/v1/badges/aaae5cf33d58299ed722/maintainability)](https://codeclimate.com/github/nktnet1/sync-dev-server/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a2c33076b9a9ac34bf7e/maintainability)](https://codeclimate.com/github/nktnet1/sync-dev-server/maintainability)
 &nbsp;
 [![Snyk Security](https://snyk.io/test/github/nktnet1/sync-dev-server/badge.svg)](https://snyk.io/test/github/nktnet1/sync-dev-server)
 &nbsp;
@@ -26,11 +26,11 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nktnet1_sync-dev-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nktnet1_sync-dev-server)
 &nbsp;
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/65161ae4d1c646ed83c9ef47b0a11473)](https://app.codacy.com/gh/nktnet1/sync-dev-server/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/945ede979ccc49d98ecec19e41bb75b9)](https://app.codacy.com/gh/nktnet1/sync-dev-server/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 &nbsp;
 [![DeepSource](https://app.deepsource.com/gh/nktnet1/sync-dev-server.svg/?label=active+issues&show_trend=true&token=r1frerF1-N2Mhrc7ZXIC1uNa)](https://app.deepsource.com/gh/nktnet1/sync-dev-server/)
 &nbsp;
-[![codebeat badge](https://codebeat.co/badges/acc44573-9938-4a14-bc41-7eb6a58dffbb)](https://codebeat.co/projects/github-com-nktnet1-sync-dev-server-main)
+[![codebeat badge](https://codebeat.co/badges/c6822dde-202e-43c7-a6cc-cd46ce7f5c41)](https://codebeat.co/projects/github-com-nktnet1-sync-dev-server-main)
 &nbsp;
 [![GitHub stars](https://img.shields.io/github/stars/nktnet1/sync-dev-server.svg?style=social)](https://github.com/nktnet1/sync-dev-server/stargazers)
 

@@ -43,12 +43,8 @@ export function startServer(
 ): ChildProcess | null;
 export function startServer(
   command: string,
-  options?: { usedPortAction: Exclude<UsedPortAction, 'ignore'> } & Options
+  options?: { usedPortAction?: Exclude<UsedPortAction, 'ignore'> } & Options
 ): ChildProcess;
-export function startServer(
-  command: string,
-  options?: Options
-): ChildProcess | null;
 export function startServer(
   command: string,
   options: Options = {}
@@ -61,7 +57,6 @@ export function startServer(
   }
   const currPortNetstat = getNetstat(opts.port, opts.host);
   handleUsedPortErrorOrKill(opts, currPortNetstat);
-  // console.log('currPortNetstat', currPortNetstat);
   if (currPortNetstat !== undefined && opts.usedPortAction === 'ignore') {
     return null;
   }
