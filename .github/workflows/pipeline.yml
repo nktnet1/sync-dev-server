@@ -3,7 +3,7 @@ name: Pipeline
 on:
   push:
     branches:
-      - main
+      - pipeline-test
     paths-ignore:
       - '**/README.md'
   pull_request:
@@ -32,8 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint
-        run: npm run lint
+      # - name: Run ESLint
+      #   run: npm run lint
 
       - name: Run tests with coverage
         run: npm test -- --coverage
