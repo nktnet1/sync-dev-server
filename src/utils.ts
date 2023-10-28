@@ -30,6 +30,14 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
   }, (ret) => {
     results = ret;
   });
+  netstat({
+    sync: true,
+    filter: {
+      local: { port },
+    },
+  }, (ret) => {
+    console.log('RET IS HEHEHE ret', ret);
+  });
   return results;
 };
 
@@ -45,6 +53,7 @@ export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boo
   const ms = 200;
   for (let time = 0; time < opts.timeout; time += ms) {
     const results = getNetstat(opts.port, opts.host);
+    console.log('Netstat results:', results);
     if (Boolean(results) === toStart) {
       return true;
     }
