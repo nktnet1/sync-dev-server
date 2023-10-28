@@ -2,6 +2,8 @@ import netstat, { SyncResult } from 'node-netstat';
 import { Options } from './types';
 import slync from 'slync';
 import killSync from 'kill-sync';
+import { spawn } from 'child_process';
+import { Transform } from 'stream';
 
 /**
  * Get the netstat information for a given port and host.
@@ -52,14 +54,29 @@ export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boo
 };
 
 /**
+ * Kill a process recursively by its pid
+ *
+ * @param {number | undefined} pid process identifier to kill
+ * @param signal IPC signal, e.g. SIGTERM
+ * @throws Error if the given pid is undefined
+ */
+export const killPid = (pid: number | undefined, signal?: string | number) => {
+  if (pid === undefined) {
+    throw new Error('The given server child process has undefined pid!');
+  }
+  killSync(pid, signal, true);
+};
+
+/**
  * Kill a server synchronously and "await" for it to stop.
  * - Ohttps://github.com/nktnet1/kill-sync
  *
  * @param {number} pid - The process ID of the server to kill.
  * @param {Required<Options>} opts - The options for killing the server.
+ * @throws Error if the given pid is undefined or the server cannot be killed
  */
 export const killServerSync = (pid: number, opts: Required<Options>) => {
-  killSync(pid, opts.signal, true);
+  killPid(pid, opts.signal);
   if (!waitForServerToStartOrStop(opts, false)) {
     throw new Error(`
 >>> Failed to kill server:
@@ -87,4 +104,44 @@ export const handleUsedPortErrorOrKill = (opts: Required<Options>, netstatResult
       killServerSync(netstatResult.pid, opts);
     }
   }
+};
+
+/**
+ * Creates a server child process that's actively listening for requests
+ *
+ * @param {string} cmd command/script to run, e.g. 'npm', 'node'
+ * @param {string[]} args arguments to pass to this command
+ * @param {Required<Options>} opts options from startServer
+ * @returns a server child process that is guaranteed to be running
+ */
+export const createServerSync = (cmd: string, args: string[], opts: Required<Options>) => {
+  const server = spawn(cmd, args, { env: opts.env });
+  if (!waitForServerToStartOrStop(opts, true)) {
+    killPid(server.pid, opts.signal);
+    throw new Error(`
+Failed to start server after ${opts.timeout} milliseconds.
+
+Please double check that you've specified the correct options, as
+the default options may not meet your needs (e.g. opts.port):
+
+${JSON.stringify(opts, null, 2)}
+    `);
+  }
+
+  const serverLogPrefixer = new Transform({
+    /* istanbul ignore next */
+    transform(chunk, _encoding, callback) {
+      this.push((`[sync-dev-server] ${chunk.toString()}`));
+      callback();
+    },
+  });
+
+  if (opts.debug) {
+    server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
+  } else {
+    /* istanbul ignore next */
+    server.stdout.on('data', () => { /* nothing to do */ });
+  }
+
+  return server;
 };

@@ -1,8 +1,6 @@
 import { Options, UsedPortAction } from './types';
-import { ChildProcess, spawn } from 'child_process';
-import { handleUsedPortErrorOrKill, getNetstat, waitForServerToStartOrStop } from './utils';
-import killSync from 'kill-sync';
-import { Transform } from 'stream';
+import { ChildProcess } from 'child_process';
+import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
 
 const defaultOptions: Required<Options> = {
   port: 5000,
@@ -24,10 +22,7 @@ export const stopServer = (server: ChildProcess | null, signal: number | string 
   if (server === null) {
     return;
   }
-  if (server.pid === undefined) {
-    throw new Error('Given child process has undefined pid');
-  }
-  killSync(server.pid, signal, true);
+  killPid(server.pid, signal);
 };
 
 /**
@@ -56,37 +51,9 @@ export function startServer(
     throw new Error(`Command is empty: ${command}`);
   }
   const currPortNetstat = getNetstat(opts.port, opts.host);
-  handleUsedPortErrorOrKill(opts, currPortNetstat);
   if (currPortNetstat !== undefined && opts.usedPortAction === 'ignore') {
     return null;
   }
-  const server = spawn(cmd, args, { env: opts.env });
-  if (!waitForServerToStartOrStop(opts, true)) {
-    stopServer(server, opts.signal);
-    throw new Error(`
-Failed to start server after ${opts.timeout} milliseconds.
-
-Please double check that you've specified the correct options, as
-the default options may not meet your needs (e.g. opts.port):
-
-${JSON.stringify(opts, null, 2)}
-    `);
-  }
-
-  const serverLogPrefixer = new Transform({
-    /* istanbul ignore next */
-    transform(chunk, _encoding, callback) {
-      this.push((`[sync-dev-server] ${chunk.toString()}`));
-      callback();
-    },
-  });
-
-  if (opts.debug) {
-    server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
-  } else {
-    /* istanbul ignore next */
-    server.stdout.on('data', () => { /* nothing to do */ });
-  }
-
-  return server;
+  handleUsedPortErrorOrKill(opts, currPortNetstat);
+  return createServerSync(cmd, args, opts);
 }
