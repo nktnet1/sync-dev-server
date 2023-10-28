@@ -8,4 +8,5 @@ export const COMMON_OPTS: Options & { usedPortAction: 'kill' } = Object.freeze({
   port: PORT,
   debug: false,
   usedPortAction: 'kill',
+  timeout: 60000
 });
