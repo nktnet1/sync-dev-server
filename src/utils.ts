@@ -32,9 +32,6 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
   });
   netstat({
     sync: true,
-    filter: {
-      local: { port },
-    },
   }, (ret) => {
     console.log('RET IS HEHEHE ret', ret);
   });
