@@ -4,6 +4,7 @@ import slync from 'slync';
 import killSync from 'kill-sync';
 import { spawn } from 'child_process';
 import { Transform } from 'stream';
+import dnsLookupSync from 'dns-lookup-sync';
 
 /**
  * Get the netstat information for a given port and host.
@@ -15,7 +16,7 @@ import { Transform } from 'stream';
  */
 export const getNetstat = (port: number, host?: string): SyncResult => {
   let results: SyncResult;
-  const address = host === 'localhost' ? '::1' : host;
+  const address = host === 'localhost' ? dnsLookupSync(host).address : host;
   const local = {
     port,
     ...(address ? { address } : {})
