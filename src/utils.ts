@@ -1,5 +1,6 @@
 import netstat, { SyncResult } from 'node-netstat';
 import { Options } from './types';
+import dnsLookupSync from 'dns-lookup-sync';
 import slync from 'slync';
 import killSync from 'kill-sync';
 import { spawn } from 'child_process';
@@ -15,7 +16,8 @@ import { Transform } from 'stream';
  */
 export const getNetstat = (port: number, host?: string): SyncResult => {
   let results: SyncResult;
-  const address = host === 'localhost' ? '::1' : host;
+  const address = host === 'localhost' ? dnsLookupSync(host).address : host;
+
   const local = {
     port,
     ...(address ? { address } : {})
@@ -115,7 +117,7 @@ export const handleUsedPortErrorOrKill = (opts: Required<Options>, netstatResult
  * @returns a server child process that is guaranteed to be running
  */
 export const createServerSync = (cmd: string, args: string[], opts: Required<Options>) => {
-  const server = spawn(cmd, args, { env: opts.env });
+  const server = spawn(cmd, args, { env: Object.assign(process.env, opts.env), shell: true });
   if (!waitForServerToStartOrStop(opts, true)) {
     killPid(server.pid, opts.signal);
     throw new Error(`
