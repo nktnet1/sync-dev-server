@@ -27,7 +27,9 @@ jobs:
         run: npm ci
 
       - name: Install net-tools (for netstat)
-        run: apt install net-tools
+        run: |
+          apt update && apt upgrade
+          apt install net-tools
 
       # - name: Run ESLint
       #   run: npm run lint
