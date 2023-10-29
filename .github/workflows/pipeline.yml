@@ -28,8 +28,8 @@ jobs:
 
       - name: Install net-tools (for netstat)
         run: |
-          apt update && apt upgrade
-          apt install net-tools
+          apt update -y && apt upgrade -y
+          apt install -y net-tools
 
       # - name: Run ESLint
       #   run: npm run lint
