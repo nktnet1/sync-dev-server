@@ -60,7 +60,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "dns-lookup-sync": "^0.0.2",
+    "dns-lookup-sync": "^1.0.0",
     "kill-sync": "^1.0.0",
     "node-netstat": "^1.9.0",
     "slync": "^1.0.2"
