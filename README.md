@@ -46,7 +46,7 @@
 
 ---
 
-Starts a server before your tests and stop on completion
+Starts a server before your tests and stops on completion
 
 Inspired by [jest-puppeteer](https://github.com/argos-ci/jest-puppeteer)'s subpackage [jest-dev-server](https://github.com/argos-ci/jest-puppeteer/tree/main/packages/jest-dev-server#readme)
 
@@ -113,7 +113,7 @@ const options = {
 
 const server = startServer('npm start', options);
 
-// send requests to the server or perform other operations
+// Send requests to the server or perform other operations
 // ...
 // ...
 // ...
@@ -161,7 +161,7 @@ interface Options {
 
 Type: `string`, Default: `undefined`
 
-Host to wait for activity on before considering that the server is running.
+Host to wait for activity before considering that the server is running.
 
 If not specified, no `address` will be passed into [node-netstat](https://github.com/danielkrainas/node-netstat). This means that all local addresses will be checked, including `localhost`, `127.0.0.1`, `0.0.0.0`, etc.
 
@@ -169,7 +169,7 @@ If not specified, no `address` will be passed into [node-netstat](https://github
 
 Type: `number`, Default: `5000`
 
-Port to wait for activity on before considering that the server is running.
+Port to wait for activity before considering that the server is running.
 
 ##### 2.1.2.3. timeout
 
@@ -197,7 +197,7 @@ The [inter-process communication signals](https://en.wikipedia.org/wiki/Signal_(
 
 Type: `'error' | 'ignore' | 'kill'`. Default: `'error'`
 
-A string that defines the action to take if the given port is already in used, whereby
+A string that defines the action to take if the given port is already in use, whereby
 - `error`: Throws a generic [Error](https://nodejs.org/api/errors.html#class-error) object
 - `ignore`: Assumes that the server is already started. `startServer` will return `null`.
 - `kill`: the process occupying this port is automatically killed
@@ -206,7 +206,7 @@ A string that defines the action to take if the given port is already in used, w
 
 Type: `Record<string, string>`. Default: `{}`
 
-Any environment variables you want to pass into the spawned server.
+Any environment variables you want to pass into the spawned server. This will take precedence over existing variables in `process.env`.
 
 ### 2.2. stopServer
 
@@ -266,4 +266,4 @@ There are currently no known limitations.
 
 ## 5. Caveats
 
-**sync-dev-server** has only been tested on Linux environments. However, as it leverages [node-netstat](https://github.com/danielkrainas/node-netstat), [kill-sync](https://github.com/nktnet1/kill-sync) and [slync](https://github.com/nktnet1/slync) which are all cross-platform, it is projected to also be comptabile with Windows and MacOS.
+**sync-dev-server** has only been tested on Linux. However, as it leverages [node-netstat](https://github.com/danielkrainas/node-netstat), [kill-sync](https://github.com/nktnet1/kill-sync), [dns-lookup-sync](https://github.com/nktnet1/dns-lookup-sync) and [slync](https://github.com/nktnet1/slync) which are all cross-platform, it is projected to also be compatible with Windows and MacOS.
