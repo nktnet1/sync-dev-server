@@ -2,12 +2,12 @@
   "name": "sync-dev-server",
   "author": "Khiet Tam Nguyen",
   "license": "MIT",
-  "description": "",
+  "description": "Starts a server before your tests and stops on completion. Inspired by jest-puppeteer's subpackage jest-dev-server. Setup and teardown operations are fully synchronous.",
   "repository": {
     "type": "git",
     "url": "https://github.com/nktnet1/sync-dev-server"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "files": [
     "dist"
   ],
@@ -39,6 +39,9 @@
     "stop",
     "kill",
     "kill-sync",
+    "testing",
+    "http",
+    "localhost",
     "comp1531"
   ],
   "devDependencies": {
