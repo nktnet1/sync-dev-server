@@ -26,7 +26,6 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
     sync: true,
     filter: {
       local,
-      state: 'LISTEN'
     },
     limit: 1,
   }, (ret) => {
