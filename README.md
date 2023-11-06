@@ -266,4 +266,4 @@ There are currently no known limitations.
 
 ## 5. Caveats
 
-**sync-dev-server** has only been tested on Linux. However, as it leverages [node-netstat](https://github.com/danielkrainas/node-netstat), [kill-sync](https://github.com/nktnet1/kill-sync), [dns-lookup-sync](https://github.com/nktnet1/dns-lookup-sync) and [slync](https://github.com/nktnet1/slync) which are all cross-platform, it is projected to also be compatible with Windows and MacOS.
+**sync-dev-server** has beentested on Linux, Windows and MacOS. It leverages [node-netstat](https://github.com/danielkrainas/node-netstat), [kill-sync](https://github.com/nktnet1/kill-sync), [dns-lookup-sync](https://github.com/nktnet1/dns-lookup-sync) and [slync](https://github.com/nktnet1/slync) which are all cross-platform.
