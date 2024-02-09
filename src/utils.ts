@@ -65,7 +65,16 @@ export const killPid = (pid: number | undefined, signal?: string | number) => {
   if (pid === undefined) {
     throw new Error('The given server child process has undefined pid!');
   }
-  killSync(pid, signal, true);
+  try {
+    killSync(pid, signal, true);
+  } catch (error: any) {
+    console.log(`\
+WARNING - failed to kill server with pid ${pid} using signal ${signal ?? 'SIGTERM'}.
+
+ERROR STACK:
+  ${error.stack}
+    `);
+  }
 };
 
 /**
