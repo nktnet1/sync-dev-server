@@ -1,6 +1,7 @@
 import { Options, UsedPortAction } from './types';
 import { ChildProcess } from 'child_process';
 import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
+import { sync as commandExistsSync } from 'command-exists';
 
 const defaultOptions: Required<Options> = {
   port: 5000,
@@ -44,6 +45,9 @@ export function startServer(
   command: string,
   options: Options = {}
 ): ChildProcess | null {
+  if (!commandExistsSync('netstat')) {
+    throw new Error('Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/');
+  }
   const opts = { ...defaultOptions, ...options };
   const args = command.split(' ');
   const cmd = args.shift();

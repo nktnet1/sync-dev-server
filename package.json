@@ -45,6 +45,7 @@
     "comp1531"
   ],
   "devDependencies": {
+    "@types/command-exists": "^1.2.3",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
     "@types/morgan": "^1.9.9",
@@ -63,6 +64,7 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "command-exists": "^1.2.9",
     "dns-lookup-sync": "^1.0.0",
     "kill-sync": "^1.0.3",
     "node-netstat": "^1.9.0",
