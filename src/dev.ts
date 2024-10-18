@@ -45,6 +45,7 @@ export function startServer(
   command: string,
   options: Options = {}
 ): ChildProcess | null {
+  /* istanbul ignore next */
   if (!commandExistsSync('netstat')) {
     throw new Error('Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/');
   }
