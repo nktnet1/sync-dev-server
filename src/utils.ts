@@ -1,10 +1,10 @@
-import netstat, { SyncResult } from 'node-netstat';
-import { Options } from './types';
-import dnsLookupSync from 'dns-lookup-sync';
-import slync from 'slync';
-import killSync from 'kill-sync';
 import { spawn } from 'child_process';
 import { Transform } from 'stream';
+import dnsLookupSync from 'dns-lookup-sync';
+import killSync from 'kill-sync';
+import netstat, { SyncResult } from 'node-netstat';
+import slync from 'slync';
+import { Options } from './types';
 
 /**
  * Get the netstat information for a given port and host.
@@ -20,17 +20,20 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
 
   const local = {
     port,
-    ...(address ? { address } : {})
+    ...(address ? { address } : {}),
   };
-  netstat({
-    sync: true,
-    filter: {
-      local,
+  netstat(
+    {
+      sync: true,
+      filter: {
+        local,
+      },
+      limit: 1,
     },
-    limit: 1,
-  }, (ret) => {
-    results = ret;
-  });
+    (ret) => {
+      results = ret;
+    },
+  );
   return results;
 };
 
@@ -141,7 +144,7 @@ ${JSON.stringify(opts, null, 2)}
   const serverLogPrefixer = new Transform({
     /* istanbul ignore next */
     transform(chunk, _encoding, callback) {
-      this.push((`[sync-dev-server] ${chunk.toString()}`));
+      this.push(`[sync-dev-server] ${chunk.toString()}`);
       callback();
     },
   });
@@ -150,7 +153,9 @@ ${JSON.stringify(opts, null, 2)}
     server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
   } else {
     /* istanbul ignore next */
-    server.stdout.on('data', () => { /* nothing to do */ });
+    server.stdout.on('data', () => {
+      /* nothing to do */
+    });
   }
 
   return server;

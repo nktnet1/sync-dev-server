@@ -1,7 +1,7 @@
-import { Options, UsedPortAction } from './types';
 import { ChildProcess } from 'child_process';
-import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
 import { sync as commandExistsSync } from 'command-exists';
+import { Options, UsedPortAction } from './types';
+import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
 
 const defaultOptions: Required<Options> = {
   port: 5000,
@@ -19,7 +19,10 @@ const defaultOptions: Required<Options> = {
  * @param {ChildProcess | null} server - The server's child process or null
  * @param {number|string} [signal='SIGTERM'] - Signal to terminate the server
  */
-export const stopServer = (server: ChildProcess | null, signal: number | string = 'SIGTERM'): void => {
+export const stopServer = (
+  server: ChildProcess | null,
+  signal: number | string = 'SIGTERM',
+): void => {
   if (server === null) {
     return;
   }
@@ -35,18 +38,17 @@ export const stopServer = (server: ChildProcess | null, signal: number | string 
  */
 export function startServer(
   command: string,
-  options?: { usedPortAction: 'ignore' } & Options
+  options?: { usedPortAction: 'ignore' } & Options,
 ): ChildProcess | null;
 export function startServer(
   command: string,
-  options?: { usedPortAction?: Exclude<UsedPortAction, 'ignore'> } & Options
+  options?: { usedPortAction?: Exclude<UsedPortAction, 'ignore'> } & Options,
 ): ChildProcess;
-export function startServer(
-  command: string,
-  options: Options = {}
-): ChildProcess | null {
+export function startServer(command: string, options: Options = {}): ChildProcess | null {
   if (!commandExistsSync('netstat')) {
-    throw new Error('Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/');
+    throw new Error(
+      'Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/',
+    );
   }
   const opts = { ...defaultOptions, ...options };
   const args = command.split(' ');
