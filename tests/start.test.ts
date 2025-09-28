@@ -1,5 +1,6 @@
-import request, { CurlError } from 'sync-request-curl';
 import dnsLookupSync from 'dns-lookup-sync';
+import request, { CurlError } from 'sync-request-curl';
+import { expect, test } from 'vitest';
 import { startServer, stopServer } from '../src';
 import { HOST, PORT, PROTOCOL } from './app/constants';
 import { START_COMMAND, COMMON_OPTS } from './testConstants';
@@ -7,7 +8,12 @@ import { START_COMMAND, COMMON_OPTS } from './testConstants';
 test("Using localhost for 'host'", () => {
   const newHost = 'localhost';
   expect(newHost).not.toEqual(HOST);
-  const server = startServer(START_COMMAND, { ...COMMON_OPTS, host: 'localhost', env: { IP: newHost }, debug: true });
+  const server = startServer(START_COMMAND, {
+    ...COMMON_OPTS,
+    host: 'localhost',
+    env: { IP: newHost },
+    debug: true,
+  });
 
   if (dnsLookupSync(newHost).address !== HOST) {
     // Using newHost which is different from original HOST, no server available

@@ -1,10 +1,10 @@
-import netstat, { SyncResult } from 'node-netstat';
-import { Options } from './types';
-import dnsLookupSync from 'dns-lookup-sync';
-import slync from 'slync';
-import killSync from 'kill-sync';
 import { spawn } from 'child_process';
 import { Transform } from 'stream';
+import dnsLookupSync from 'dns-lookup-sync';
+import killSync from 'kill-sync';
+import netstat, { SyncResult } from 'node-netstat';
+import slync from 'slync';
+import { Options } from './types';
 
 /**
  * Get the netstat information for a given port and host.
@@ -20,17 +20,20 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
 
   const local = {
     port,
-    ...(address ? { address } : {})
+    ...(address ? { address } : {}),
   };
-  netstat({
-    sync: true,
-    filter: {
-      local,
+  netstat(
+    {
+      sync: true,
+      filter: {
+        local,
+      },
+      limit: 1,
     },
-    limit: 1,
-  }, (ret) => {
-    results = ret;
-  });
+    (ret) => {
+      results = ret;
+    },
+  );
   return results;
 };
 
@@ -65,6 +68,7 @@ export const killPid = (pid: number | undefined, signal?: string | number) => {
   if (pid === undefined) {
     throw new Error('The given server child process has undefined pid!');
   }
+  /* v8 ignore next 10 */
   try {
     killSync(pid, signal, true);
   } catch (error: any) {
@@ -139,9 +143,9 @@ ${JSON.stringify(opts, null, 2)}
   }
 
   const serverLogPrefixer = new Transform({
-    /* istanbul ignore next */
+    /* v8 ignore next 4 */
     transform(chunk, _encoding, callback) {
-      this.push((`[sync-dev-server] ${chunk.toString()}`));
+      this.push(`[sync-dev-server] ${chunk.toString()}`);
       callback();
     },
   });
@@ -149,8 +153,10 @@ ${JSON.stringify(opts, null, 2)}
   if (opts.debug) {
     server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
   } else {
-    /* istanbul ignore next */
-    server.stdout.on('data', () => { /* nothing to do */ });
+    /* v8 ignore next */
+    server.stdout.on('data', () => {
+      /* nothing to do */
+    });
   }
 
   return server;

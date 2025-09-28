@@ -23,10 +23,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
+
+      - name: Enable pnpm
+        run: corepack enable pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Install net-tools (for netstat)
         run: |
@@ -34,10 +37,10 @@ jobs:
           sudo apt install -y net-tools
 
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Run tests with coverage
-        run: npm run tc
+        run: pnpm tc
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
