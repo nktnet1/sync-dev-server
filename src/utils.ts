@@ -71,12 +71,12 @@ export const killPid = (pid: number | undefined, signal?: string | number) => {
   /* v8 ignore next 10 */
   try {
     killSync(pid, signal, true);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log(`\
 WARNING - failed to kill server with pid ${pid} using signal ${signal ?? 'SIGTERM'}.
 
 ERROR STACK:
-  ${error.stack}
+  ${(error as Error).stack}
     `);
   }
 };
