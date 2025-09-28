@@ -68,6 +68,7 @@ export const killPid = (pid: number | undefined, signal?: string | number) => {
   if (pid === undefined) {
     throw new Error('The given server child process has undefined pid!');
   }
+  /* v8 ignore next 10 */
   try {
     killSync(pid, signal, true);
   } catch (error: any) {
@@ -142,7 +143,7 @@ ${JSON.stringify(opts, null, 2)}
   }
 
   const serverLogPrefixer = new Transform({
-    /* istanbul ignore next */
+    /* v8 ignore next 4 */
     transform(chunk, _encoding, callback) {
       this.push(`[sync-dev-server] ${chunk.toString()}`);
       callback();
@@ -152,7 +153,7 @@ ${JSON.stringify(opts, null, 2)}
   if (opts.debug) {
     server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
   } else {
-    /* istanbul ignore next */
+    /* v8 ignore next */
     server.stdout.on('data', () => {
       /* nothing to do */
     });

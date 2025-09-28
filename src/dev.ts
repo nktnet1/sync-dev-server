@@ -45,6 +45,7 @@ export function startServer(
   options?: { usedPortAction?: Exclude<UsedPortAction, 'ignore'> } & Options,
 ): ChildProcess;
 export function startServer(command: string, options: Options = {}): ChildProcess | null {
+  /* v8 ignore next 5 */
   if (!commandExistsSync('netstat')) {
     throw new Error(
       'Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/',
