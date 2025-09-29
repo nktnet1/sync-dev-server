@@ -34,7 +34,7 @@ test("Using local ip for 'host'", () => {
     isServerReadyFn: () => {
       try {
         const response = request('GET', `${PROTOCOL}://${newHost}:${PORT}`);
-        return !!response.getJSON('utf-8').message;
+        return Boolean(response.getJSON('utf-8').message);
       } catch {
         return false;
       }

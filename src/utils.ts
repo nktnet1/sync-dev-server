@@ -7,6 +7,30 @@ import slync from 'slync';
 import { Options } from './types';
 
 /**
+ * Get the PID number from a given port
+ * @param port
+ */
+const getPortPid = (port: number): number | null => {
+  try {
+    if (process.platform === 'darwin' || process.platform === 'linux') {
+      const output = execSync(`lsof -ti:${port}`).toString().split('\n').filter(Boolean);
+      return output.length ? Number(output[0]) : null;
+    } else if (process.platform === 'win32') {
+      const output = execSync(
+        `for /f "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do @echo %a`,
+      )
+        .toString()
+        .split('\n')
+        .filter(Boolean);
+      return output.length ? Number(output[0]) : null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+/**
  * Get the netstat information for a given port and host.
  * - https://github.com/danielkrainas/node-netstat
  *
@@ -49,8 +73,7 @@ export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boo
   const ms = 200;
   const isReadyFn = opts.isServerReadyFn ?? (() => getNetstat(opts.port, opts.host));
   for (let time = 0; time < opts.timeout; time += ms) {
-    const res = isReadyFn();
-    if (!!res === toStart) {
+    if (Boolean(isReadyFn()) === toStart) {
       return true;
     }
     slync(ms);
@@ -170,28 +193,4 @@ ${JSON.stringify(opts, null, 2)}
   }
 
   return server;
-};
-
-/**
- * Get the PID number from a given port
- * @param port
- */
-export const getPortPid = (port: number): number | null => {
-  try {
-    if (process.platform === 'darwin' || process.platform === 'linux') {
-      const output = execSync(`lsof -ti:${port}`).toString().split('\n').filter(Boolean);
-      return output.length ? Number(output[0]) : null;
-    } else if (process.platform === 'win32') {
-      const output = execSync(
-        `for /f "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do @echo %a`,
-      )
-        .toString()
-        .split('\n')
-        .filter(Boolean);
-      return output.length ? Number(output[0]) : null;
-    }
-    return null;
-  } catch {
-    return null;
-  }
 };

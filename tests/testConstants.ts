@@ -12,7 +12,7 @@ export const COMMON_OPTS: Options & { usedPortAction: 'kill' } = {
   isServerReadyFn: () => {
     try {
       const response = request('GET', `${PROTOCOL}://${HOST}:${PORT}`);
-      return !!response.getJSON('utf-8').message;
+      return Boolean(response.getJSON('utf-8').message);
     } catch {
       return false;
     }
