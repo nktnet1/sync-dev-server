@@ -1,10 +1,36 @@
-import { spawn } from 'child_process';
+import { execSync, spawn } from 'child_process';
 import { Transform } from 'stream';
 import dnsLookupSync from 'dns-lookup-sync';
 import killSync from 'kill-sync';
 import netstat, { SyncResult } from 'node-netstat';
 import slync from 'slync';
 import { Options } from './types';
+
+/**
+ * Get the PID number from a given port
+ * @param port
+ */
+/* v8 ignore start */
+const getPortPid = (port: number): number | null => {
+  try {
+    if (process.platform === 'darwin' || process.platform === 'linux') {
+      const output = execSync(`lsof -ti:${port}`).toString().split('\n').filter(Boolean);
+      return output.length ? Number(output[0]) : null;
+    } else if (process.platform === 'win32') {
+      const output = execSync(
+        `for /f "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do @echo %a`,
+      )
+        .toString()
+        .split('\n')
+        .filter(Boolean);
+      return output.length ? Number(output[0]) : null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+/* v8 ignore stop */
 
 /**
  * Get the netstat information for a given port and host.
@@ -30,6 +56,7 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
       },
       limit: 1,
     },
+    /* v8 ignore next 3 */
     (ret) => {
       results = ret;
     },
@@ -47,9 +74,9 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
  */
 export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boolean): boolean => {
   const ms = 200;
+  const isReadyFn = opts.isServerReadyFn ?? (() => getNetstat(opts.port, opts.host));
   for (let time = 0; time < opts.timeout; time += ms) {
-    const results = getNetstat(opts.port, opts.host);
-    if (Boolean(results) === toStart) {
+    if (Boolean(isReadyFn()) === toStart) {
       return true;
     }
     slync(ms);
@@ -72,7 +99,7 @@ export const killPid = (pid: number | undefined, signal?: string | number) => {
   try {
     killSync(pid, signal, true);
   } catch (error: unknown) {
-    console.log(`\
+    console.error(`\
 WARNING - failed to kill server with pid ${pid} using signal ${signal ?? 'SIGTERM'}.
 
 ERROR STACK:
@@ -89,12 +116,12 @@ ERROR STACK:
  * @param {Required<Options>} opts - The options for killing the server.
  * @throws Error if the given pid is undefined or the server cannot be killed
  */
-export const killServerSync = (pid: number, opts: Required<Options>) => {
+export const killServerSync = (opts: Required<Options>, pid: number) => {
   killPid(pid, opts.signal);
+
   if (!waitForServerToStartOrStop(opts, false)) {
     throw new Error(`
->>> Failed to kill server:
-${JSON.stringify(getNetstat(opts.port, opts.host), null, 2)}
+>>> Failed to kill server.
 
 >>> Options:
 ${JSON.stringify(opts, null, 2)}
@@ -109,13 +136,24 @@ ${JSON.stringify(opts, null, 2)}
  * @param {Required<Options>} opts - The options for handling a used port.
  * @param {SyncResult} netstatResult - The netstat result for the used port
  */
-export const handleUsedPortErrorOrKill = (opts: Required<Options>, netstatResult: SyncResult) => {
-  if (netstatResult !== undefined) {
+export const handleUsedPortErrorOrKill = (
+  opts: Required<Options>,
+  netstatResult: SyncResult,
+  isActive: boolean,
+) => {
+  if (isActive) {
     if (opts.usedPortAction === 'error') {
       throw new Error(`Port ${opts.port} is already taken.`);
     }
     if (opts.usedPortAction === 'kill') {
-      killServerSync(netstatResult.pid, opts);
+      /* v8 ignore next */
+      const pid = netstatResult?.pid ?? getPortPid(opts.port);
+
+      /* v8 ignore next 3 */
+      if (!pid) {
+        throw new Error('Failed to kill existing server - missing pid');
+      }
+      killServerSync(opts, pid);
     }
   }
 };

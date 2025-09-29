@@ -68,8 +68,9 @@ Setup and teardown operations are fully synchronous
             - [2.1.2.3. timeout](#2123-timeout)
             - [2.1.2.4. debug](#2124-debug)
             - [2.1.2.5. signal](#2125-signal)
-            - [2.1.2.5. usedPortAction](#2126-usedportaction)
-            - [2.1.2.5. env](#2127-env)
+            - [2.1.2.6. usedPortAction](#2126-usedportaction)
+            - [2.1.2.7. env](#2127-env)
+            - [2.1.2.8. isServerReadyFn](#2128-isserverreadyfn)
     - [2.2. stopServer](#22-stopserver)
         - [2.2.1. server](#221-server)
         - [2.2.2. signal](#222-signal)
@@ -207,6 +208,15 @@ A string that defines the action to take if the given port is already in use, wh
 Type: `Record<string, string>`. Default: `{}`
 
 Any environment variables you want to pass into the spawned server. This will take precedence over existing variables in `process.env`.
+
+#### 2.1.2.8. isServerReadyFn
+
+Type: `(() => boolean) | null`. Default: `null`
+
+Optional callback function to check if the server has started successfully. If not specified (or `null`),
+the default [node-netstat](https://github.com/danielkrainas/node-netstat) library is used to scan for the
+port status. Note that there is an
+[open issue with MacOS Sonoma onwards](https://github.com/danielkrainas/node-netstat/issues/43).
 
 ### 2.2. stopServer
 
