@@ -11,6 +11,7 @@ const defaultOptions: Required<Options> = {
   debug: true,
   usedPortAction: 'error',
   env: {},
+  isServerReadyFn: null,
 };
 
 /**
@@ -57,10 +58,12 @@ export function startServer(command: string, options: Options = {}): ChildProces
   if (!cmd) {
     throw new Error(`Command is empty: ${command}`);
   }
-  const currPortNetstat = getNetstat(opts.port, opts.host);
-  if (currPortNetstat !== undefined && opts.usedPortAction === 'ignore') {
+
+  const netstatResult = getNetstat(opts.port, opts.host);
+  const isActive = opts.isServerReadyFn?.() ?? netstatResult !== undefined;
+  if (isActive && opts.usedPortAction === 'ignore') {
     return null;
   }
-  handleUsedPortErrorOrKill(opts, currPortNetstat);
+  handleUsedPortErrorOrKill(opts, netstatResult, isActive);
   return createServerSync(cmd, args, opts);
 }

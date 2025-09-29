@@ -1,3 +1,4 @@
+import os from 'os';
 import dnsLookupSync from 'dns-lookup-sync';
 import request, { CurlError } from 'sync-request-curl';
 import { expect, test } from 'vitest';
@@ -5,14 +6,39 @@ import { startServer, stopServer } from '../src';
 import { HOST, PORT, PROTOCOL } from './app/constants';
 import { START_COMMAND, COMMON_OPTS } from './testConstants';
 
-test("Using localhost for 'host'", () => {
-  const newHost = 'localhost';
+function getLocalIp() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    if (interfaces?.[name]) {
+      for (const iface of interfaces[name]) {
+        if (iface.family === 'IPv4' && !iface.internal) {
+          return iface.address;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+test("Using local ip for 'host'", () => {
+  const newHost = getLocalIp() ?? '';
+  if (!newHost) {
+    throw new Error('Missing local IP');
+  }
   expect(newHost).not.toEqual(HOST);
   const server = startServer(START_COMMAND, {
     ...COMMON_OPTS,
     host: 'localhost',
     env: { IP: newHost },
     debug: true,
+    isServerReadyFn: () => {
+      try {
+        const response = request('GET', `${PROTOCOL}://${newHost}:${PORT}`);
+        return !!response.getJSON('utf-8').message;
+      } catch {
+        return false;
+      }
+    },
   });
 
   if (dnsLookupSync(newHost).address !== HOST) {

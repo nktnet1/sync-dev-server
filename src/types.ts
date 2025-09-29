@@ -8,4 +8,5 @@ export interface Options {
   signal?: string | number;
   usedPortAction?: UsedPortAction;
   env?: Record<string, string>;
+  isServerReadyFn?: (() => boolean) | null;
 }
