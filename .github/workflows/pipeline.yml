@@ -33,7 +33,7 @@ jobs:
 
       - name: Install net-tools (for netstat)
         run: |
-          sudo apt update -y && sudo apt upgrade -y
+          sudo apt update -y
           sudo apt install -y net-tools
 
       - name: Run ESLint
