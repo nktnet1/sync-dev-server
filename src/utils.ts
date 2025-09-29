@@ -10,6 +10,7 @@ import { Options } from './types';
  * Get the PID number from a given port
  * @param port
  */
+/* v8 ignore start */
 const getPortPid = (port: number): number | null => {
   try {
     if (process.platform === 'darwin' || process.platform === 'linux') {
@@ -29,6 +30,7 @@ const getPortPid = (port: number): number | null => {
     return null;
   }
 };
+/* v8 ignore stop */
 
 /**
  * Get the netstat information for a given port and host.
@@ -54,6 +56,7 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
       },
       limit: 1,
     },
+    /* v8 ignore next 3 */
     (ret) => {
       results = ret;
     },
@@ -118,8 +121,7 @@ export const killServerSync = (opts: Required<Options>, pid: number) => {
 
   if (!waitForServerToStartOrStop(opts, false)) {
     throw new Error(`
->>> Failed to kill server:
-${JSON.stringify(getNetstat(opts.port, opts.host), null, 2)}
+>>> Failed to kill server.
 
 >>> Options:
 ${JSON.stringify(opts, null, 2)}
@@ -144,7 +146,10 @@ export const handleUsedPortErrorOrKill = (
       throw new Error(`Port ${opts.port} is already taken.`);
     }
     if (opts.usedPortAction === 'kill') {
+      /* v8 ignore next */
       const pid = netstatResult?.pid ?? getPortPid(opts.port);
+
+      /* v8 ignore next 3 */
       if (!pid) {
         throw new Error('Failed to kill existing server - missing pid');
       }

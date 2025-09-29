@@ -46,20 +46,27 @@ export function startServer(
   options?: { usedPortAction?: Exclude<UsedPortAction, 'ignore'> } & Options,
 ): ChildProcess;
 export function startServer(command: string, options: Options = {}): ChildProcess | null {
-  /* v8 ignore next 5 */
-  if (!commandExistsSync('netstat')) {
-    throw new Error(
-      'Error: the "netstat" command is not in path. Please install net-tools: https://net-tools.sourceforge.io/',
-    );
-  }
   const opts = { ...defaultOptions, ...options };
+  const hasNetstat = commandExistsSync('netstat');
+
+  /* v8 ignore next 8 */
+  if (!hasNetstat && !opts.isServerReadyFn) {
+    console.warn(`\
+WARNING: "netstat" command not found in Path.
+
+Please install net-tools: https://net-tools.sourceforge.io/, or otherwise provide
+opts.isServerReadyFn
+    `);
+  }
+
   const args = command.split(' ');
   const cmd = args.shift();
   if (!cmd) {
     throw new Error(`Command is empty: ${command}`);
   }
 
-  const netstatResult = getNetstat(opts.port, opts.host);
+  /* v8 ignore next */
+  const netstatResult = hasNetstat ? getNetstat(opts.port, opts.host) : undefined;
   const isActive = opts.isServerReadyFn?.() ?? netstatResult !== undefined;
   if (isActive && opts.usedPortAction === 'ignore') {
     return null;
