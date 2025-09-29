@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process';
 import { sync as commandExistsSync } from 'command-exists';
-import { Options, UsedPortAction } from './types';
+import { Options } from './types';
 import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
 
 const defaultOptions: Required<Options> = {
@@ -37,14 +37,16 @@ export const stopServer = (
  * @param {Options} [options={}] - The options for starting the server
  * @returns {ChildProcess | null} - The spawned server child process
  */
-type StartServerReturn<O extends Options | undefined> = O extends { usedPortAction: 'ignore' }
+export type StartServerReturn<T extends Options | undefined> = T extends {
+  usedPortAction: 'ignore';
+}
   ? ChildProcess | null
   : ChildProcess;
 
-export function startServer<O extends Options | undefined = undefined>(
+export function startServer<T extends Options | undefined = Options>(
   command: string,
-  options?: O & { usedPortAction?: UsedPortAction },
-): StartServerReturn<O> {
+  options?: T,
+): StartServerReturn<T> {
   const opts = { ...defaultOptions, ...options };
   const hasNetstat = commandExistsSync('netstat');
 
@@ -68,7 +70,7 @@ opts.isServerReadyFn
   const netstatResult = hasNetstat ? getNetstat(opts.port, opts.host) : undefined;
   const isActive = opts.isServerReadyFn?.() ?? netstatResult !== undefined;
   if (isActive && opts.usedPortAction === 'ignore') {
-    return null as StartServerReturn<O>;
+    return null as StartServerReturn<T>;
   }
   handleUsedPortErrorOrKill(opts, netstatResult, isActive);
   return createServerSync(cmd, args, opts);
