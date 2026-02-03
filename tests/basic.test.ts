@@ -1,5 +1,6 @@
 import { ChildProcess } from 'child_process';
-import request, { CurlError } from 'sync-request-curl';
+import request from 'sync-request-curl';
+import { CurlError } from 'sync-request-curl/errors';
 import { beforeEach, afterEach, expect, test } from 'vitest';
 import { startServer, stopServer } from '../src';
 import { SERVER_URL } from './app/constants';

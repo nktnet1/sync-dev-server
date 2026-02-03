@@ -1,6 +1,7 @@
 import os from 'os';
 import dnsLookupSync from 'dns-lookup-sync';
-import request, { CurlError } from 'sync-request-curl';
+import request from 'sync-request-curl';
+import { CurlError } from 'sync-request-curl/errors';
 import { expect, test } from 'vitest';
 import { startServer, stopServer } from '../src';
 import { HOST, PORT, PROTOCOL } from './app/constants';
@@ -33,7 +34,7 @@ test("Using local ip for 'host'", () => {
     debug: true,
     isServerReadyFn: () => {
       try {
-        const response = request('GET', `${PROTOCOL}://${newHost}:${PORT}`);
+        const response = request('GET', `${PROTOCOL}://${newHost}:${PORT}`, { timeout: 2000 });
         return Boolean(response.getJSON('utf-8').message);
       } catch {
         return false;

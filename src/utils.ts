@@ -42,7 +42,7 @@ const getPortPid = (port: number): number | null => {
  */
 export const getNetstat = (port: number, host?: string): SyncResult => {
   let results: SyncResult;
-  const address = host === 'localhost' ? dnsLookupSync(host).address : host;
+  const address = host === 'localhost' ? dnsLookupSync(host, 4).address : host;
 
   const local = {
     port,

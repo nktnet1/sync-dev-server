@@ -1,5 +1,2 @@
-import { startServer, stopServer } from './dev';
-
-export { startServer, stopServer };
-export default { startServer, stopServer };
+export { startServer, stopServer } from './dev';
 export type { Options, UsedPortAction } from './types';

@@ -11,7 +11,7 @@ export const COMMON_OPTS: Options & { usedPortAction: 'kill' } = {
   usedPortAction: 'kill',
   isServerReadyFn: () => {
     try {
-      const response = request('GET', `${PROTOCOL}://${HOST}:${PORT}`);
+      const response = request('GET', `${PROTOCOL}://${HOST}:${PORT}`, { timeout: 2000 });
       return Boolean(response.getJSON('utf-8').message);
     } catch {
       return false;
