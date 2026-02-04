@@ -22,19 +22,19 @@ function getLocalIp() {
 }
 
 test("Using local ip for 'host'", () => {
-  const newHost = getLocalIp() ?? '';
-  if (!newHost) {
+  const localIp = getLocalIp() ?? '';
+  if (!localIp) {
     throw new Error('Missing local IP');
   }
-  expect(newHost).not.toEqual(HOST);
+  expect(localIp).not.toEqual(HOST);
   const server = startServer(START_COMMAND, {
     ...COMMON_OPTS,
-    host: 'localhost',
-    env: { IP: newHost },
+    host: localIp,
+    env: { IP: localIp },
     debug: true,
     isServerReadyFn: () => {
       try {
-        const response = request('GET', `${PROTOCOL}://${newHost}:${PORT}`, { timeout: 2000 });
+        const response = request('GET', `${PROTOCOL}://${localIp}:${PORT}`, { timeout: 2000 });
         return Boolean(response.getJSON('utf-8').message);
       } catch {
         return false;
@@ -42,13 +42,13 @@ test("Using local ip for 'host'", () => {
     },
   });
 
-  if (dnsLookupSync(newHost).address !== HOST) {
-    // Using newHost which is different from original HOST, no server available
+  if (dnsLookupSync(localIp).address !== HOST) {
+    // Using localIp which is different from original HOST, no server available
     expect(() => request('GET', `${PROTOCOL}://${HOST}:${PORT}`)).toThrow(CurlError);
   }
 
-  // Using newHost, should be OK (200)
-  expect(request('GET', `${PROTOCOL}://${newHost}:${PORT}`).statusCode).toStrictEqual(200);
+  // Using localIp, should be OK (200)
+  expect(request('GET', `${PROTOCOL}://${localIp}:${PORT}`).statusCode).toStrictEqual(200);
   stopServer(server);
-  expect(() => request('GET', `${PROTOCOL}://${newHost}:${PORT}`)).toThrow(CurlError);
+  expect(() => request('GET', `${PROTOCOL}://${localIp}:${PORT}`)).toThrow(CurlError);
 });
