@@ -1,3 +1,5 @@
+import { ChildProcess } from 'child_process';
+
 export type UsedPortAction = 'error' | 'ignore' | 'kill';
 
 export interface Options {
@@ -9,4 +11,9 @@ export interface Options {
   usedPortAction?: UsedPortAction;
   env?: Record<string, string>;
   isServerReadyFn?: (() => boolean) | null;
+}
+
+export interface SyncServer {
+  process: ChildProcess;
+  opts: Required<Options>;
 }

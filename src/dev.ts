@@ -1,7 +1,12 @@
-import { ChildProcess } from 'child_process';
 import { sync as commandExistsSync } from 'command-exists';
-import { Options } from './types';
-import { handleUsedPortErrorOrKill, getNetstat, killPid, createServerSync } from './utils';
+import { Options, SyncServer } from './types';
+import {
+  handleUsedPortErrorOrKill,
+  getNetstat,
+  killPid,
+  createServerSync,
+  waitForServerToStartOrStop,
+} from './utils';
 
 const defaultOptions: Required<Options> = {
   port: 5000,
@@ -21,13 +26,14 @@ const defaultOptions: Required<Options> = {
  * @param {number|string} [signal='SIGTERM'] - Signal to terminate the server
  */
 export const stopServer = (
-  server: ChildProcess | null,
+  server: SyncServer | null,
   signal: number | string = 'SIGTERM',
 ): void => {
   if (server === null) {
     return;
   }
-  killPid(server.pid, signal);
+  killPid(server.process.pid, signal);
+  waitForServerToStartOrStop(server.opts, false);
 };
 
 /**
@@ -40,8 +46,8 @@ export const stopServer = (
 export type StartServerReturn<T extends Options | undefined> = T extends {
   usedPortAction: 'ignore';
 }
-  ? ChildProcess | null
-  : ChildProcess;
+  ? SyncServer | null
+  : SyncServer;
 
 export function startServer<T extends Options | undefined = Options>(
   command: string,
@@ -73,5 +79,8 @@ opts.isServerReadyFn
     return null as StartServerReturn<T>;
   }
   handleUsedPortErrorOrKill(opts, netstatResult, isActive);
-  return createServerSync(cmd, args, opts);
+  return {
+    process: createServerSync(cmd, args, opts),
+    opts,
+  };
 }

@@ -222,9 +222,17 @@ port status. Note that there is an
 
 #### 2.2.1. server
 
-Type: [`ChildProcess`](https://nodejs.org/api/child_process.html#class-childprocess) | `null`
+The returned value from [`startServer`](#21-startserver), which is either
+`null` or `SyncServer`. `SyncServer` is defined as:
 
-The server child process returned from [`startServer`](#21-startserver). 
+```ts
+export interface SyncServer {
+  // https://nodejs.org/api/child_process.html#class-childprocess
+  process: ChildProcess;
+  // Opts that were passed when starting the server, combined with defaults
+  opts: Required<Options>;
+}
+```
 
 `stopServer` will do nothing if `null` is passed.
 

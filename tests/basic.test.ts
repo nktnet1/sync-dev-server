@@ -1,12 +1,12 @@
-import { ChildProcess } from 'child_process';
 import request from 'sync-request-curl';
 import { CurlError } from 'sync-request-curl/errors';
 import { beforeEach, afterEach, expect, test } from 'vitest';
 import { startServer, stopServer } from '../src';
+import { SyncServer } from '../src/types';
 import { SERVER_URL } from './app/constants';
 import { START_COMMAND, START_COMMAND_2, COMMON_OPTS } from './testConstants';
 
-let server: ChildProcess;
+let server: SyncServer;
 beforeEach(() => {
   server = startServer(START_COMMAND, { ...COMMON_OPTS });
 });
