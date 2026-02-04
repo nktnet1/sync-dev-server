@@ -12,13 +12,11 @@ const server = app.listen(PORT, HOST, () => {
 process.on('SIGINT', () => {
   server.close(() => {
     console.log(`\nShutting down ${APP_NAME} gracefully from SIGINT.`);
-    process.exit(0);
   });
 });
 
 process.on('SIGTERM', () => {
   server.close(() => {
     console.log(`\nShutting down ${APP_NAME} gracefully from SIGTERM.`);
-    process.exit(0);
   });
 });
