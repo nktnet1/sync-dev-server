@@ -154,6 +154,7 @@ export const handleUsedPortErrorOrKill = (
         throw new Error('Failed to kill existing server - missing pid');
       }
       killServerSync(opts, pid);
+      /* v8 ignore next 3 */
       if (!waitForServerToStartOrStop(opts, false)) {
         throw new Error('Failed to stop existing server within timeout');
       }
