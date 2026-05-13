@@ -30,8 +30,6 @@
 &nbsp;
 [![DeepSource](https://app.deepsource.com/gh/nktnet1/sync-dev-server.svg/?label=active+issues&show_trend=true&token=r1frerF1-N2Mhrc7ZXIC1uNa)](https://app.deepsource.com/gh/nktnet1/sync-dev-server/)
 &nbsp;
-[![codebeat badge](https://codebeat.co/badges/c6822dde-202e-43c7-a6cc-cd46ce7f5c41)](https://codebeat.co/projects/github-com-nktnet1-sync-dev-server-main)
-&nbsp;
 [![GitHub stars](https://img.shields.io/github/stars/nktnet1/sync-dev-server.svg?style=social)](https://github.com/nktnet1/sync-dev-server/stargazers)
 
 [![Downloads Total](https://badgen.net/npm/dt/sync-dev-server)](https://moiva.io/?npm=sync-dev-server)

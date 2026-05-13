@@ -1,5 +1,8 @@
 name: Pipeline
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -15,6 +18,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+      fail-fast: true
 
     steps:
       - name: Checkout code
@@ -23,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node-version }}
 
       - name: Enable pnpm
         run: corepack enable pnpm

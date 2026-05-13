@@ -48,11 +48,11 @@
     "@types/command-exists": "^1.2.3",
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
-    "@types/node": "^25.6.2",
+    "@types/node": "^25.7.0",
     "@types/node-netstat": "^1.8.4",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
-    "@typescript-eslint/parser": "^8.59.2",
-    "@vitest/coverage-v8": "4.1.5",
+    "@typescript-eslint/eslint-plugin": "^8.59.3",
+    "@typescript-eslint/parser": "^8.59.3",
+    "@vitest/coverage-v8": "4.1.6",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -65,18 +65,18 @@
     "tsdown": "^0.22.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.11",
-    "vitest": "^4.1.5"
+    "typescript-eslint": "^8.59.3",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   },
   "dependencies": {
     "command-exists": "^1.2.9",
     "dns-lookup-sync": "^1.0.3",
     "kill-sync": "^1.0.4",
     "node-netstat": "^1.9.0",
-    "slync": "^1.0.2"
+    "slync": "^1.0.3"
   },
-  "packageManager": "pnpm@11.0.9",
+  "packageManager": "pnpm@11.1.1",
   "types": "./dist/index.d.cts",
   "exports": {
     ".": {
