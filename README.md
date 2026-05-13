@@ -26,7 +26,7 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nktnet1_sync-dev-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nktnet1_sync-dev-server)
 &nbsp;
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/945ede979ccc49d98ecec19e41bb75b9)](https://app.codacy.com/gh/nktnet1/sync-dev-server/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/220ca7b56d22482188d9518793ea9ac8)](https://app.codacy.com/gh/nktnet1/sync-dev-server/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 &nbsp;
 [![DeepSource](https://app.deepsource.com/gh/nktnet1/sync-dev-server.svg/?label=active+issues&show_trend=true&token=r1frerF1-N2Mhrc7ZXIC1uNa)](https://app.deepsource.com/gh/nktnet1/sync-dev-server/)
 &nbsp;
