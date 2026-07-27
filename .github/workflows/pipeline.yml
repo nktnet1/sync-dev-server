@@ -43,11 +43,14 @@ jobs:
           sudo apt update -y
           sudo apt install -y net-tools
 
-      - name: Run ESLint
-        run: pnpm lint
+      - name: Run biome
+        run: pnpm check
+
+      - name: Run tsc
+        run: pnpm typecheck
 
       - name: Run tests with coverage
-        run: pnpm tc
+        run: pnpm test --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

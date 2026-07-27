@@ -1,20 +1,20 @@
-import { sync as commandExistsSync } from 'command-exists';
-import { Options, SyncServer } from './types';
+import { sync as commandExistsSync } from "command-exists";
+import type { Options, SyncServer } from "./types";
 import {
-  handleUsedPortErrorOrKill,
-  getNetstat,
-  killPid,
   createServerSync,
+  getNetstat,
+  handleUsedPortErrorOrKill,
+  killPid,
   waitForServerToStartOrStop,
-} from './utils';
+} from "./utils";
 
 const defaultOptions: Required<Options> = {
   port: 5000,
-  host: '',
+  host: "",
   timeout: 10000,
-  signal: 'SIGTERM',
+  signal: "SIGTERM",
   debug: true,
-  usedPortAction: 'error',
+  usedPortAction: "error",
   env: {},
   isServerReadyFn: null,
 };
@@ -27,7 +27,7 @@ const defaultOptions: Required<Options> = {
  */
 export const stopServer = (
   server: SyncServer | null,
-  signal: number | string = 'SIGTERM',
+  signal: number | string = "SIGTERM",
 ): void => {
   if (server === null) {
     return;
@@ -44,7 +44,7 @@ export const stopServer = (
  * @returns {ChildProcess | null} - The spawned server child process
  */
 export type StartServerReturn<T extends Options | undefined> = T extends {
-  usedPortAction: 'ignore';
+  usedPortAction: "ignore";
 }
   ? SyncServer | null
   : SyncServer;
@@ -54,7 +54,7 @@ export function startServer<T extends Options | undefined = Options>(
   options?: T,
 ): StartServerReturn<T> {
   const opts = { ...defaultOptions, ...options };
-  const hasNetstat = commandExistsSync('netstat');
+  const hasNetstat = commandExistsSync("netstat");
 
   /* v8 ignore next 8 */
   if (!hasNetstat && !opts.isServerReadyFn) {
@@ -66,16 +66,18 @@ opts.isServerReadyFn
     `);
   }
 
-  const args = command.split(' ');
+  const args = command.split(" ");
   const cmd = args.shift();
   if (!cmd) {
     throw new Error(`Command is empty: ${command}`);
   }
 
   /* v8 ignore next */
-  const netstatResult = hasNetstat ? getNetstat(opts.port, opts.host) : undefined;
+  const netstatResult = hasNetstat
+    ? getNetstat(opts.port, opts.host)
+    : undefined;
   const isActive = opts.isServerReadyFn?.() ?? netstatResult !== undefined;
-  if (isActive && opts.usedPortAction === 'ignore') {
+  if (isActive && opts.usedPortAction === "ignore") {
     return null as StartServerReturn<T>;
   }
   handleUsedPortErrorOrKill(opts, netstatResult, isActive);

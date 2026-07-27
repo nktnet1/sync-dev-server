@@ -1,10 +1,10 @@
-import { execSync, spawn } from 'child_process';
-import { Transform } from 'stream';
-import dnsLookupSync from 'dns-lookup-sync';
-import killSync from 'kill-sync';
-import netstat, { SyncResult } from 'node-netstat';
-import slync from 'slync';
-import { Options } from './types';
+import { execSync, spawn } from "child_process";
+import dnsLookupSync from "dns-lookup-sync";
+import killSync from "kill-sync";
+import netstat, { type SyncResult } from "node-netstat";
+import slync from "slync";
+import { Transform } from "stream";
+import type { Options } from "./types";
 
 /**
  * Get the PID number from a given port
@@ -13,15 +13,18 @@ import { Options } from './types';
 /* v8 ignore start */
 const getPortPid = (port: number): number | null => {
   try {
-    if (process.platform === 'darwin' || process.platform === 'linux') {
-      const output = execSync(`lsof -ti:${port}`).toString().split('\n').filter(Boolean);
+    if (process.platform === "darwin" || process.platform === "linux") {
+      const output = execSync(`lsof -ti:${port}`)
+        .toString()
+        .split("\n")
+        .filter(Boolean);
       return output.length ? Number(output[0]) : null;
-    } else if (process.platform === 'win32') {
+    } else if (process.platform === "win32") {
       const output = execSync(
         `for /f "tokens=5" %a in ('netstat -ano ^| findstr :${port}') do @echo %a`,
       )
         .toString()
-        .split('\n')
+        .split("\n")
         .filter(Boolean);
       return output.length ? Number(output[0]) : null;
     }
@@ -42,7 +45,7 @@ const getPortPid = (port: number): number | null => {
  */
 export const getNetstat = (port: number, host?: string): SyncResult => {
   let results: SyncResult;
-  const address = host === 'localhost' ? dnsLookupSync(host, 4).address : host;
+  const address = host === "localhost" ? dnsLookupSync(host, 4).address : host;
 
   const local = {
     port,
@@ -72,9 +75,13 @@ export const getNetstat = (port: number, host?: string): SyncResult => {
  * @param {boolean} toStart - wait for start or wait for stop
  * @returns {boolean} - True if started/stopped within timeout, false otherwise
  */
-export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boolean): boolean => {
+export const waitForServerToStartOrStop = (
+  opts: Required<Options>,
+  toStart: boolean,
+): boolean => {
   const ms = 200;
-  const isReadyFn = opts.isServerReadyFn ?? (() => getNetstat(opts.port, opts.host));
+  const isReadyFn =
+    opts.isServerReadyFn ?? (() => getNetstat(opts.port, opts.host));
   for (let time = 0; time < opts.timeout; time += ms) {
     if (Boolean(isReadyFn()) === toStart) {
       return true;
@@ -93,14 +100,14 @@ export const waitForServerToStartOrStop = (opts: Required<Options>, toStart: boo
  */
 export const killPid = (pid: number | undefined, signal?: string | number) => {
   if (pid === undefined) {
-    throw new Error('The given server child process has undefined pid!');
+    throw new Error("The given server child process has undefined pid!");
   }
   /* v8 ignore next 10 */
   try {
     killSync(pid, signal, true);
   } catch (error: unknown) {
     console.error(`\
-WARNING - failed to kill server with pid ${pid} using signal ${signal ?? 'SIGTERM'}.
+WARNING - failed to kill server with pid ${pid} using signal ${signal ?? "SIGTERM"}.
 
 ERROR STACK:
   ${(error as Error).stack}
@@ -142,21 +149,21 @@ export const handleUsedPortErrorOrKill = (
   isActive: boolean,
 ) => {
   if (isActive) {
-    if (opts.usedPortAction === 'error') {
+    if (opts.usedPortAction === "error") {
       throw new Error(`Port ${opts.port} is already taken.`);
     }
-    if (opts.usedPortAction === 'kill') {
+    if (opts.usedPortAction === "kill") {
       /* v8 ignore next */
       const pid = netstatResult?.pid ?? getPortPid(opts.port);
 
       /* v8 ignore next 3 */
       if (!pid) {
-        throw new Error('Failed to kill existing server - missing pid');
+        throw new Error("Failed to kill existing server - missing pid");
       }
       killServerSync(opts, pid);
       /* v8 ignore next 3 */
       if (!waitForServerToStartOrStop(opts, false)) {
-        throw new Error('Failed to stop existing server within timeout');
+        throw new Error("Failed to stop existing server within timeout");
       }
     }
   }
@@ -170,8 +177,14 @@ export const handleUsedPortErrorOrKill = (
  * @param {Required<Options>} opts options from startServer
  * @returns a server child process that is guaranteed to be running
  */
-export const createServerSync = (cmd: string, args: string[], opts: Required<Options>) => {
-  const server = spawn(cmd, args, { env: Object.assign(process.env, opts.env) });
+export const createServerSync = (
+  cmd: string,
+  args: string[],
+  opts: Required<Options>,
+) => {
+  const server = spawn(cmd, args, {
+    env: Object.assign(process.env, opts.env),
+  });
   if (!waitForServerToStartOrStop(opts, true)) {
     killPid(server.pid, opts.signal);
     throw new Error(`
@@ -196,7 +209,7 @@ ${JSON.stringify(opts, null, 2)}
     server.stdout.pipe(serverLogPrefixer).pipe(process.stdout);
   } else {
     /* v8 ignore next */
-    server.stdout.on('data', () => {
+    server.stdout.on("data", () => {
       /* nothing to do */
     });
   }

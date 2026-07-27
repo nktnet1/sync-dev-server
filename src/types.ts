@@ -1,6 +1,6 @@
-import { ChildProcess } from 'child_process';
+import type { ChildProcess } from "child_process";
 
-export type UsedPortAction = 'error' | 'ignore' | 'kill';
+export type UsedPortAction = "error" | "ignore" | "kill";
 
 export interface Options {
   host?: string;

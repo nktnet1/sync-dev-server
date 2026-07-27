@@ -135,7 +135,7 @@ npm start
 npm run dev
 yarn start
 node src/app.js
-ts-node src/server.ts
+tsx src/server.ts
 ```
 
 #### 2.1.2. options

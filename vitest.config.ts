@@ -1,10 +1,10 @@
-import path from 'path';
-import { defineConfig } from 'vitest/config';
-import { BaseSequencer, TestSpecification } from 'vitest/node';
+import path from "path";
+import { defineConfig } from "vitest/config";
+import { BaseSequencer, type TestSpecification } from "vitest/node";
 
 class CustomSequencer extends BaseSequencer {
   async sort(files: TestSpecification[]): Promise<TestSpecification[]> {
-    const order = ['basic.test.ts', 'error.test.ts', 'start.test.ts'];
+    const order = ["basic.test.ts", "error.test.ts", "start.test.ts"];
 
     return files.toSorted((a, b) => {
       const aIndex = order.indexOf(path.basename(a.moduleId));
@@ -22,8 +22,8 @@ export default defineConfig({
     isolate: false,
     maxWorkers: 1,
     coverage: {
-      include: ['src/**/*.ts'],
-      exclude: ['src/types.ts'],
+      include: ["src/**/*.ts"],
+      exclude: ["src/types.ts"],
     },
     sequence: {
       sequencer: CustomSequencer,
